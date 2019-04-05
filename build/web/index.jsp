@@ -21,5 +21,8 @@
             <p>E-mail: <input type="text" name="email" size="15">
             <p><input type="submit" value="Enviar"> <input type="reset" value="Limpars">
         </form>
+        <p>
+            <a href="consultar_cliente.jsp"> Consulte aqui os Clientes cadastrados!!! </a>
+        </p>
     </body>
 </html>

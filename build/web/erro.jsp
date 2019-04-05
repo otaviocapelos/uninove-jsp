@@ -12,6 +12,12 @@
         <title>Exemplo Insert</title>
     </head>
     <body>
-        <h1>Deu erro na Controle!!! Não Reconheceu a Flag SalvarCli</h1>
+        <h1>
+            ${mensagem}
+            <%
+                String msg = (String) request.getAttribute("mensagem");
+                out.print(msg);
+            %>
+        </h1>
     </body>
 </html>

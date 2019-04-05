@@ -8,7 +8,9 @@ package model;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +57,49 @@ public class ClienteDao {
             } else {
                 return 0;
             }
+        }
+    }
+    
+    public ArrayList consultarClienteNome(String nome) {
+        try {
+            String sql = "SELECT * FROM CLIENTE WHERE NOME LIKE ?";
+            ArrayList<Cliente> lista = new ArrayList<Cliente>();
+            st = (PreparedStatement) conexao.prepareStatement(sql);
+            st.setString(1, "%"+nome+"%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Cliente cli = new Cliente();
+                cli.setNome(rs.getString("nome"));
+                cli.setTel(rs.getString("telefone"));
+                cli.setEmail(rs.getString("email"));
+                cli.setIdade(rs.getInt("idade"));
+                
+                lista.add(cli);
+            }
+            return lista;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+    
+    public ArrayList consultarTodosCliente() {
+        try {
+            String sql = "SELECT * FROM CLIENTE";
+            ArrayList<Cliente> lista = new ArrayList<Cliente>();
+            st = (PreparedStatement) conexao.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Cliente cli = new Cliente();
+                cli.setNome(rs.getString("nome"));
+                cli.setTel(rs.getString("telefone"));
+                cli.setEmail(rs.getString("email"));
+                cli.setIdade(rs.getInt("idade"));
+                
+                lista.add(cli);
+            }
+            return lista;
+        } catch (SQLException ex) {
+            return null;
         }
     }
 }

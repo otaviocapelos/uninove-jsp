@@ -7,6 +7,7 @@ package controle;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,7 +47,9 @@ public class Controle extends HttpServlet {
             tel = request.getParameter("telefone");
             idade = Integer.parseInt(request.getParameter("idade"));
             email = request.getParameter("email");
+
             Cliente cli = new Cliente();
+
             cli.setIdade(idade);
             cli.setNome(nome);
             cli.setTel(tel);
@@ -57,18 +60,74 @@ public class Controle extends HttpServlet {
 
             if (r == 0) {
                 mensagem = "Erro ao se conectar ao banco de dados";
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                d.forward(request, response);
             } else {
                 r = dao.salvarCliente(cli);
                 if (r == 1) {
                     mensagem = "Cliente Cadastrado!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("cadastrosucesso.jsp");
+                    d.forward(request, response);
                 } else {
                     mensagem = "Ocorreu algum erro!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                    d.forward(request, response);
                 }
             }
             dao.desconectar();
             request.setAttribute("mensagem", mensagem);
             RequestDispatcher d = request.getRequestDispatcher("cadastrosucesso.jsp");
             d.forward(request, response);
+        } else if (flag.equalsIgnoreCase("consultarclientenome")) {
+            nome = request.getParameter("nome");
+            ClienteDao dao = new ClienteDao();
+            int r = dao.conectar();
+            if (r == 0) {
+                mensagem = "erro na conexão com o bd";
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                d.forward(request, response);
+            } else {
+                ArrayList lista = dao.consultarClienteNome(nome);
+                if (!lista.isEmpty()) {
+                    request.setAttribute("lista", lista);
+                    RequestDispatcher d = request.getRequestDispatcher("exibir_cliente.jsp");
+                    d.forward(request, response);
+                    return;
+                } else {
+                    mensagem = "Usuário não encontrado!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("mensagens.jsp");
+                    d.forward(request, response);
+                }
+                dao.desconectar();
+            }
+        } else if (flag.equalsIgnoreCase("consultartodosclientes")) {
+            ClienteDao dao = new ClienteDao();
+            int r = dao.conectar();
+            if (r == 0) {
+                mensagem = "erro na conexão com o bd";
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                d.forward(request, response);
+            } else {
+                ArrayList lista = dao.consultarTodosCliente();
+                if (!lista.isEmpty()) {
+                    request.setAttribute("lista", lista);
+                    RequestDispatcher d = request.getRequestDispatcher("exibir_cliente.jsp");
+                    d.forward(request, response);
+                    return;
+                } else {
+                    mensagem = "Usuário não encontrado!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("mensagens.jsp");
+                    d.forward(request, response);
+                }
+                dao.desconectar();
+            }
         } else {
             mensagem = "Erro na flag!!!";
             request.setAttribute("mensagem", mensagem);
