@@ -10,12 +10,20 @@ package model;
  * @author otavio
  */
 public class Cliente {
-    private int idade;
+    private int id, idade;
     private String nome, tel, email;
 
     public Cliente() {
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
     /**
      * @return the idade
      */

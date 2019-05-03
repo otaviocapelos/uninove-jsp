@@ -60,6 +60,42 @@ public class ClienteDao {
         }
     }
     
+    public int alterarCliente(Cliente cli) {
+        try {
+            String comando = "UPDATE cliente set nome = ?, telefone = ?, idade = ?, email = ? where id = ?";
+            st = (PreparedStatement) this.conexao.prepareStatement(comando);
+            st.setString(1, cli.getNome());
+            st.setString(2, cli.getTel());
+            st.setInt(3, cli.getIdade());
+            st.setString(4, cli.getEmail());
+            st.setInt(5, cli.getId());
+            st.execute();
+            return 1;
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() == 1062) {
+                return 2;
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+        public int excluirCliente(int id) {
+        try {
+            String comando = "DELETE FROM cliente where id = ?";
+            st = (PreparedStatement) this.conexao.prepareStatement(comando);
+            st.setInt(1, id);
+            st.execute();
+            return 1;
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() == 1062) {
+                return 2;
+            } else {
+                return 0;
+            }
+        }
+    }
+    
     public ArrayList consultarClienteNome(String nome) {
         try {
             String sql = "SELECT * FROM CLIENTE WHERE NOME LIKE ?";
@@ -69,6 +105,7 @@ public class ClienteDao {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Cliente cli = new Cliente();
+                cli.setId(rs.getInt("id"));
                 cli.setNome(rs.getString("nome"));
                 cli.setTel(rs.getString("telefone"));
                 cli.setEmail(rs.getString("email"));
@@ -90,6 +127,7 @@ public class ClienteDao {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Cliente cli = new Cliente();
+                cli.setId(rs.getInt("id"));
                 cli.setNome(rs.getString("nome"));
                 cli.setTel(rs.getString("telefone"));
                 cli.setEmail(rs.getString("email"));

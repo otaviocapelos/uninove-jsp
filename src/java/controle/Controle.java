@@ -39,7 +39,7 @@ public class Controle extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String nome, tel, email;
-        int idade;
+        int id, idade;
         String flag = request.getParameter("flag");
 
         if (flag.equalsIgnoreCase("salvarcli")) {
@@ -128,6 +128,75 @@ public class Controle extends HttpServlet {
                 }
                 dao.desconectar();
             }
+        } else if (flag.equalsIgnoreCase("alterarcliente")) {
+            id = Integer.parseInt(request.getParameter("id"));
+            nome = request.getParameter("nome");
+            tel = request.getParameter("telefone");
+            idade = Integer.parseInt(request.getParameter("idade"));
+            email = request.getParameter("email");
+
+            Cliente cli = new Cliente();
+            cli.setId(id);
+            cli.setIdade(idade);
+            cli.setNome(nome);
+            cli.setTel(tel);
+            cli.setEmail(email);
+
+            ClienteDao dao = new ClienteDao();
+            int r = dao.conectar();
+
+            if (r == 0) {
+                mensagem = "Erro ao se conectar ao banco de dados";
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                d.forward(request, response);
+            } else {
+                r = dao.alterarCliente(cli);
+                if (r == 1) {
+                    mensagem = "Cliente Alterado!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("index.jsp");
+                    d.forward(request, response);
+                } else {
+                    mensagem = "Ocorreu algum erro!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                    d.forward(request, response);
+                }
+            }
+            dao.desconectar();
+            request.setAttribute("mensagem", mensagem);
+            RequestDispatcher d = request.getRequestDispatcher("index.jsp");
+            d.forward(request, response);
+        } else if (flag.equalsIgnoreCase("excluircliente")) {
+            id = Integer.parseInt(request.getParameter("id"));
+
+            ClienteDao dao = new ClienteDao();
+            int r = dao.conectar();
+
+            if (r == 0) {
+                mensagem = "Erro ao se conectar ao banco de dados";
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                d.forward(request, response);
+            } else {
+                r = dao.excluirCliente(id);
+                if (r == 1) {
+                    mensagem = "Cliente Excluido!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("index.jsp");
+                    d.forward(request, response);
+                } else {
+                    mensagem = "Ocorreu algum erro!!!";
+                    request.setAttribute("mensagem", mensagem);
+                    RequestDispatcher d = request.getRequestDispatcher("erro.jsp");
+                    d.forward(request, response);
+                }
+            }
+            dao.desconectar();
+            request.setAttribute("mensagem", mensagem);
+            RequestDispatcher d = request.getRequestDispatcher("index.jsp");
+            d.forward(request, response);
         } else {
             mensagem = "Erro na flag!!!";
             request.setAttribute("mensagem", mensagem);

@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Exemplo Insert!!</title>
+        <title>Cadastro</title>
     </head>
     <body>
-        <h1>Exemplo Insert!</h1>
+        <h1>Cadastro de Cliente!</h1>
         <form action="Controle" method="post">
             <input type="hidden" name="flag" value="salvarcli" />
             <p>Nome: <input type="text" name="nome" size="30">
